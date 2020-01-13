@@ -1,9 +1,24 @@
 #include "ray.c"
 #include <stdio.h>
 
+float hit_sphere(const Vec3 center, float radius, const Ray r) {
+  Vec3 oc = vec3_sub_inplace(ray_origin(r), center);
+  float a = vec3_dot(ray_direction(r), ray_direction(r));
+  float b = 2.0 *  vec3_dot(oc, ray_direction(r));
+  float c = vec3_dot(oc, oc) - radius * radius;
+  float discriminant = b * b - 4 * a * c;
+  return discriminant < 0 ? -1.0 : (-b - sqrt(discriminant)) / (2.0 * a);
+}
+
 Vec3 color(const Ray r) {
+  float t = hit_sphere(vec3_from_floats((float[]){0.0, 0.0, -1.0}), 0.5, r);
+  if (t > 0.0) {
+    Vec3 N = vec3_make_unit(vec3_sub_inplace(ray_point_at_parameter(r, t), vec3_from_floats((float[]){0.0, 0.0, -1.0})));
+    return vec3_mul(vec3_from_floats((float[]){ vec3_x(N) + 1, vec3_y(N) + 1, vec3_z(N) + 1}), 0.5);
+  }
+
   Vec3 unit_direction = vec3_unit(ray_direction(r));
-  float t = 0.5 * vec3_y(unit_direction) + 1.0;
+  t = 0.5 * vec3_y(unit_direction) + 1.0;
   return vec3_add(vec3_mul(vec3_from_floats((float[]){1.0, 1.0, 1.0}), (1.0 - t)),
                   vec3_mul(vec3_from_floats((float[]){0.5, 0.7, 1.0}), t       ));
 }
@@ -32,7 +47,6 @@ int main() {
                                        vec3_mul(vertical, v)));
 
       Vec3 col = color(r);
-      ray_destroy(r);
 
       unsigned char ir = (unsigned char)(255.99f * vec3_r(col));
       unsigned char ig = (unsigned char)(255.99f * vec3_g(col));
@@ -40,13 +54,7 @@ int main() {
 
       fprintf(fp, "%d %d %d\n", ir, ig, ib);
 
-      vec3_destroy(col);
     }
-
-  vec3_destroy(lower_left_corner);
-  vec3_destroy(horizental);
-  vec3_destroy(vertical);
-  vec3_destroy(origin);
 
   fclose(fp);
 
