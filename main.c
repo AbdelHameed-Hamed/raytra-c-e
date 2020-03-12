@@ -2,10 +2,10 @@
 #include <stdio.h>
 
 static float hit_sphere(const Vec3 center, float radius, const Ray r) {
-  Vec3 oc = ray_origin(r) - center;
-  float a = vec3_dot(ray_direction(r), ray_direction(r));
-  float b = 2.0f *  vec3_dot(oc, ray_direction(r));
-  float c = vec3_dot(oc, oc) - radius * radius;
+  Vec3 oc = r.a - center;
+  float a = vec3_mag_sqr(r.b);
+  float b = 2.0f *  vec3_dot(oc, r.b);
+  float c = vec3_mag_sqr(oc) - radius * radius;
   float discriminant = b * b - 4 * a * c;
   return discriminant < 0 ? -1.0f : (-b - sqrtf(discriminant)) / (2.0f * a);
 }
@@ -17,7 +17,7 @@ static Vec3 color(const Ray r) {
     return (N + 1) * 0.5f;
   }
 
-  Vec3 unit_direction = vec3_unit(ray_direction(r));
+  Vec3 unit_direction = vec3_unit(r.b);
   t = 0.5f * unit_direction.y + 1.0f;
   return (Vec3){1.0f, 1.0f, 1.0f} * (1.0f - t) + (Vec3){0.5f, 0.7f, 1.0f} * t;
 }
@@ -39,9 +39,7 @@ int main() {
       float u = (float)i / (float)width;
       float v = (float)j / (float)height;
 
-      Ray r = ray_set(ray_init(),
-                      origin,
-                      horizental * u + lower_left_corner + vertical * v);
+      Ray r = (Ray){ origin, horizental * u + lower_left_corner + vertical * v };
 
       Vec3 col = color(r);
 
