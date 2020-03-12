@@ -1,7 +1,8 @@
 #include "ray.c"
 #include <stdio.h>
 
-static float hit_sphere(const Vec3 center, float radius, const Ray r) {
+static float
+hit_sphere(const Vec3 center, float radius, const Ray r) {
   Vec3 oc = r.a - center;
   float a = vec3_mag_sqr(r.b);
   float b = 2.0f *  vec3_dot(oc, r.b);
@@ -10,7 +11,8 @@ static float hit_sphere(const Vec3 center, float radius, const Ray r) {
   return discriminant < 0 ? -1.0f : (-b - sqrtf(discriminant)) / (2.0f * a);
 }
 
-static Vec3 color(const Ray r) {
+static Vec3
+color(const Ray r) {
   float t = hit_sphere((Vec3){0.0f, 0.0f, -1.0f}, 0.5f, r);
   if (t > 0.0f) {
     Vec3 N = vec3_make_unit(ray_point_at_parameter(r, t) - (Vec3){0.0f, 0.0f, -1.0f});
@@ -22,7 +24,8 @@ static Vec3 color(const Ray r) {
   return (Vec3){1.0f, 1.0f, 1.0f} * (1.0f - t) + (Vec3){0.5f, 0.7f, 1.0f} * t;
 }
 
-int main() {
+int
+main() {
   FILE *fp;
   fopen_s(&fp, "image.ppm", "w");
 
@@ -48,7 +51,6 @@ int main() {
       unsigned char ib = (unsigned char)(255.99f * col.b);
 
       fprintf(fp, "%d %d %d\n", ir, ig, ib);
-
     }
 
   fclose(fp);

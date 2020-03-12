@@ -1,9 +1,7 @@
 #include <math.h>
 #include <string.h>
 
-typedef float IVec3 __attribute__((ext_vector_type(3)));
-
-typedef IVec3 Vec3;
+typedef float Vec3 __attribute__((ext_vector_type(3)));
 
 static float
 vec3_dot(const Vec3 lhs, const Vec3 rhs) {

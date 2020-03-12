@@ -1,11 +1,9 @@
 #include "vec3.c"
 
-struct IRay {
+typedef struct {
 	Vec3 a;
 	Vec3 b;
-};
-
-typedef struct IRay Ray;
+} Ray;
 
 static Vec3
 ray_point_at_parameter(Ray self, float t) {
