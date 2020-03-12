@@ -1,11 +1,11 @@
 #include "vec3.c"
 
 typedef struct {
-	Vec3 a;
-	Vec3 b;
+	Vec3 origin;
+	Vec3 direction;
 } Ray;
 
 static Vec3
-ray_point_at_parameter(Ray self, float t) {
-	return self.a + t * self.b;
+ray_point_at_parameter(const Ray self, float t) {
+	return self.origin + t * self.direction;
 }

@@ -1,27 +1,28 @@
-#include "ray.c"
+#include "hittable.c"
 #include <stdio.h>
 
-static float
-hit_sphere(const Vec3 center, float radius, const Ray r) {
-  Vec3 oc = r.a - center;
-  float a = vec3_mag_sqr(r.b);
-  float b = 2.0f *  vec3_dot(oc, r.b);
-  float c = vec3_mag_sqr(oc) - radius * radius;
-  float discriminant = b * b - 4 * a * c;
-  return discriminant < 0 ? -1.0f : (-b - sqrtf(discriminant)) / (2.0f * a);
-}
-
 static Vec3
-color(const Ray r) {
-  float t = hit_sphere((Vec3){0.0f, 0.0f, -1.0f}, 0.5f, r);
-  if (t > 0.0f) {
-    Vec3 N = vec3_make_unit(ray_point_at_parameter(r, t) - (Vec3){0.0f, 0.0f, -1.0f});
-    return (N + 1) * 0.5f;
+color(const Ray r, Sphere spheres[], int count) {
+  IHit_Record rec, temp_rec;
+  _Bool hit_anything   = 0.0f;
+  float closest_so_far = __FLT_MAX__;
+  
+  for (int i = 0; i < count; ++i) {
+    if (sphere_hit(spheres[0], r, 0.0f, __FLT_MAX__, &temp_rec)) {
+      hit_anything   = 1.0f;
+      closest_so_far = temp_rec.t;
+      rec            = temp_rec;
+    }
   }
 
-  Vec3 unit_direction = vec3_unit(r.b);
-  t = 0.5f * unit_direction.y + 1.0f;
-  return (Vec3){1.0f, 1.0f, 1.0f} * (1.0f - t) + (Vec3){0.5f, 0.7f, 1.0f} * t;
+  if (hit_anything) {
+    return 0.5f * (Vec3){rec.normal + 1};
+  }
+  else {
+    Vec3 unit_direction = vec3_unit(r.direction);
+    float t = 0.5f * unit_direction.y + 1.0f;
+    return (1.0f - t) * (Vec3){1.0f, 1.0f, 1.0f} + t * (Vec3){0.5f, 0.7f, 1.0f};
+  }
 }
 
 int
@@ -29,22 +30,26 @@ main() {
   FILE *fp;
   fopen_s(&fp, "image.ppm", "w");
 
-  const unsigned short width = 1280, height = 720;
-  fprintf(fp, "P3\n%d %d \n255\n", width, height);
+  const unsigned short WIDTH = 1280, HEIGHT = 720;
+  fprintf(fp, "P3\n%d %d \n255\n", WIDTH, HEIGHT);
 
   Vec3 lower_left_corner = (Vec3){-2.0f, -1.0f, -1.0f};
   Vec3 horizental        = (Vec3){ 4.0f,  0.0f,  0.0f};
   Vec3 vertical          = (Vec3){ 0.0f,  2.0f,  0.0f};
   Vec3 origin            = (Vec3){ 0.0f,  0.0f,  0.0f};
 
-  for (short j = height - 1; j >= 0; --j)
-    for (unsigned short i = 0; i < width; ++i) {
-      float u = (float)i / (float)width;
-      float v = (float)j / (float)height;
+  Sphere sphere[2] = (Sphere[]){ {(Vec3){0.0f,    0.0f, -1.0f},   0.5f},
+                                 {(Vec3){0.0f, -100.5f, -1.0f}, 100.0f} };
+
+  for (short j = HEIGHT - 1; j >= 0; --j)
+    for (unsigned short i = 0; i < WIDTH; ++i) {
+      float u = (float)i / (float)WIDTH;
+      float v = (float)j / (float)HEIGHT;
 
       Ray r = (Ray){ origin, horizental * u + lower_left_corner + vertical * v };
 
-      Vec3 col = color(r);
+      Vec3 p = ray_point_at_parameter(r, 2.0f);
+      Vec3 col = color(r, sphere, 2);
 
       unsigned char ir = (unsigned char)(255.99f * col.r);
       unsigned char ig = (unsigned char)(255.99f * col.g);
