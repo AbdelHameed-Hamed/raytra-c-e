@@ -1,4 +1,4 @@
-#include "hittable.c"
+#include "includes.c"
 #include <stdio.h>
 
 static Vec3
@@ -33,20 +33,19 @@ main() {
   const unsigned short WIDTH = 1280, HEIGHT = 720;
   fprintf(fp, "P3\n%d %d \n255\n", WIDTH, HEIGHT);
 
-  Vec3 lower_left_corner = (Vec3){-2.0f, -1.0f, -1.0f};
-  Vec3 horizental        = (Vec3){ 4.0f,  0.0f,  0.0f};
-  Vec3 vertical          = (Vec3){ 0.0f,  2.0f,  0.0f};
-  Vec3 origin            = (Vec3){ 0.0f,  0.0f,  0.0f};
+  Sphere sphere[2] = { 
+      {(Vec3){0.0f,    0.0f, -1.0f},   0.5f},
+      {(Vec3){0.0f, -100.5f, -1.0f}, 100.0f}
+  };
 
-  Sphere sphere[2] = (Sphere[]){ {(Vec3){0.0f,    0.0f, -1.0f},   0.5f},
-                                 {(Vec3){0.0f, -100.5f, -1.0f}, 100.0f} };
+  Camera cam = camera_new();
 
   for (short j = HEIGHT - 1; j >= 0; --j)
     for (unsigned short i = 0; i < WIDTH; ++i) {
       float u = (float)i / (float)WIDTH;
       float v = (float)j / (float)HEIGHT;
 
-      Ray r = (Ray){ origin, horizental * u + lower_left_corner + vertical * v };
+      Ray r = camera_get_ray(cam, u, v);
 
       Vec3 p = ray_point_at_parameter(r, 2.0f);
       Vec3 col = color(r, sphere, 2);
