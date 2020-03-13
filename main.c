@@ -1,5 +1,7 @@
 #include "includes.c"
+
 #include <stdio.h>
+#include <stdlib.h>
 
 static Vec3
 color(const Ray r, Sphere spheres[], int count) {
@@ -25,12 +27,14 @@ color(const Ray r, Sphere spheres[], int count) {
   }
 }
 
+
+// clang -std=c18 -Wall -Weverything -Wextra -Wpedantic -Ofast main.c -o main.exe
 int
 main() {
   FILE *fp;
   fopen_s(&fp, "image.ppm", "w");
 
-  const unsigned short WIDTH = 1280, HEIGHT = 720;
+  const unsigned short WIDTH = 1280, HEIGHT = 720, SAMPLES = 100;
   fprintf(fp, "P3\n%d %d \n255\n", WIDTH, HEIGHT);
 
   Sphere sphere[2] = { 
@@ -42,13 +46,19 @@ main() {
 
   for (short j = HEIGHT - 1; j >= 0; --j)
     for (unsigned short i = 0; i < WIDTH; ++i) {
-      float u = (float)i / (float)WIDTH;
-      float v = (float)j / (float)HEIGHT;
+      Vec3 col = { 0.0f };
+      for (unsigned short k = 0; k < SAMPLES; ++k) {
+        float random_n = rand() / (float)RAND_MAX;
+        random_n = random_n == 1.0f ? 0.0f : random_n;
 
-      Ray r = camera_get_ray(cam, u, v);
-
-      Vec3 p = ray_point_at_parameter(r, 2.0f);
-      Vec3 col = color(r, sphere, 2);
+        float u = (float)(i + random_n) / (float)WIDTH;
+        float v = (float)(j + random_n) / (float)HEIGHT;
+  
+        Ray r = camera_get_ray(cam, u, v);
+        Vec3 p = ray_point_at_parameter(r, 2.0f);
+        col += color(r, sphere, 2);
+      }
+      col /= (float)SAMPLES;
 
       unsigned char ir = (unsigned char)(255.99f * col.r);
       unsigned char ig = (unsigned char)(255.99f * col.g);
