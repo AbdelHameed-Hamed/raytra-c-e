@@ -9,7 +9,7 @@ static _Bool
 sphere_hit(const Sphere self, const Ray r, float t_min, float t_max, Hit_Record rec) {
 	Vec3 oc = r.origin - self.center;
 	float a = vec3_mag_sqr(r.direction);
-	float b = 2.0f *  vec3_dot(oc, r.direction);
+	float b = vec3_dot(oc, r.direction);
 	float c = vec3_mag_sqr(oc) - self.radius * self.radius;
 	float discriminant = b * b - a * c;
 	if (discriminant > 0) {
@@ -28,5 +28,5 @@ sphere_hit(const Sphere self, const Ray r, float t_min, float t_max, Hit_Record 
             return 1;
         }
 	}
-	return -1;
+	return 0;
 }

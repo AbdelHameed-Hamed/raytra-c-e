@@ -8,7 +8,7 @@ color(const Ray r, Sphere spheres[], int count) {
   float closest_so_far = __FLT_MAX__;
   
   for (int i = 0; i < count; ++i) {
-    if (sphere_hit(spheres[0], r, 0.0f, __FLT_MAX__, &temp_rec)) {
+    if (sphere_hit(spheres[i], r, 0.0f, closest_so_far, &temp_rec)) {
       hit_anything   = 1.0f;
       closest_so_far = temp_rec.t;
       rec            = temp_rec;
