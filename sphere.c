@@ -1,6 +1,7 @@
-#include "hittable.c"
+#include "materials.c"
 
 typedef struct {
+	Material material;
 	Vec3 center;
 	float radius;
 } Sphere;

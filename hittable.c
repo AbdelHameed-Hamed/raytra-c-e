@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ray.c"
 
 // Previously the structure of this project was simpler, you simply had a chain of files
