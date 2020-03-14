@@ -46,8 +46,3 @@ vec3_unit(const Vec3 self) {
 	float mag = vec3_mag(self);
 	return self / mag;
 }
-
-static Vec3
-vec3_reflect(const Vec3 vec, const Vec3 norm) {
-	return vec - 2 * vec3_dot(vec, norm) * norm;
-}

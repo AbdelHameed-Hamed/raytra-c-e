@@ -44,16 +44,18 @@ main() {
   const unsigned short WIDTH = 1280, HEIGHT = 720, SAMPLES = 100;
   fprintf(fp, "P3\n%d %d \n255\n", WIDTH, HEIGHT);
 
-  #define SPHERES_NUM 4
+  #define SPHERES_NUM 5
   Sphere sphere[SPHERES_NUM] = {
-      {{.MATERIAL_KIND = KIND_LAMBERTIAN, .materials.lambertian = {(Vec3){0.8f, 0.3f, 0.3f}}},
+      {{.MATERIAL_KIND = KIND_LAMBERTIAN, .materials.lambertian = {(Vec3){0.1f, 0.2f, 0.5f}}},
        (Vec3){ 0.0f,    0.0f, -1.0f},   0.5f},
       {{.MATERIAL_KIND = KIND_LAMBERTIAN, .materials.lambertian = {(Vec3){0.8f, 0.8f, 0.0f}}},
        (Vec3){ 0.0f, -100.5f, -1.0f}, 100.0f},
-      {{.MATERIAL_KIND = KIND_METAL, .materials.metal = {(Vec3){0.8f, 0.6f, 0.2f}, 0.3f}},
+      {{.MATERIAL_KIND = KIND_METAL,     .materials.metal = {(Vec3){0.8f, 0.6f, 0.2f}, 0.0f}},
        (Vec3){ 1.0f,    0.0f, -1.0f},   0.5f},
-      {{.MATERIAL_KIND = KIND_METAL, .materials.metal = {(Vec3){0.8f, 0.8f, 0.8f}, 0.3f}},
-       (Vec3){-1.0f,    0.0f, -1.0f},   0.5f}
+      {{.MATERIAL_KIND = KIND_DIELECTRIC, .materials.dielectric = {1.5f}},
+       (Vec3){-1.0f,    0.0f, -1.0f},   0.5f},
+      {{.MATERIAL_KIND = KIND_DIELECTRIC, .materials.dielectric = {1.5f}},
+       (Vec3){-1.0f,    0.0f, -1.0f}, -0.45f}
   };
 
   Camera cam = {
