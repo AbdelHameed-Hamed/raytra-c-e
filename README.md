@@ -2,4 +2,4 @@
 
 Work in progress.
 
-![image info](./image.ppm)
+![image info](./image.jpg)
