@@ -1,12 +1,11 @@
 #include <math.h>
-#include <string.h>
 
 typedef float Vec3 __attribute__((ext_vector_type(3)));
 
 static float
 vec3_dot(const Vec3 lhs, const Vec3 rhs) {
 	Vec3 temp = lhs * rhs;
-	float res = temp[0] + temp[1] + temp[2];
+	float res = temp.x + temp.y + temp.z;
 
 	return res;
 }
@@ -43,6 +42,5 @@ vec3_make_unit(Vec3 self) {
 
 static Vec3
 vec3_unit(const Vec3 self) {
-	float mag = vec3_mag(self);
-	return self / mag;
+	return self / vec3_mag(self);
 }
