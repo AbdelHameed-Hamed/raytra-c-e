@@ -121,17 +121,17 @@ dielectric_scatter(const Dielectric self,
 }
 
 typedef struct {
-	enum {
-		KIND_METAL,
-		KIND_LAMBERTIAN,
-		KIND_DIELECTRIC
-	} MATERIAL_KIND;
-
 	union {
 		Metal metal;
 		Lambertian lambertian;
 		Dielectric dielectric;
 	} materials;
+
+	enum {
+		KIND_METAL,
+		KIND_LAMBERTIAN,
+		KIND_DIELECTRIC
+	} MATERIAL_KIND;
 } Material;
 
 static _Bool
