@@ -45,12 +45,12 @@ main() {
   fprintf(fp, "P3\n%d %d \n255\n", WIDTH, HEIGHT);
 
   #define SPHERES_NUM 5
-  Sphere sphere[SPHERES_NUM] = {
+  Sphere spheres[SPHERES_NUM] = {
       {{.MATERIAL_KIND = KIND_LAMBERTIAN, .materials.lambertian = {(Vec3){0.1f, 0.2f, 0.5f}}},
        (Vec3){ 0.0f,    0.0f, -1.0f},   0.5f},
       {{.MATERIAL_KIND = KIND_LAMBERTIAN, .materials.lambertian = {(Vec3){0.8f, 0.8f, 0.0f}}},
        (Vec3){ 0.0f, -100.5f, -1.0f}, 100.0f},
-      {{.MATERIAL_KIND = KIND_METAL,     .materials.metal = {(Vec3){0.8f, 0.6f, 0.2f}, 0.0f}},
+      {{.MATERIAL_KIND = KIND_METAL,      .materials.metal = {(Vec3){0.8f, 0.6f, 0.2f}, 0.0f}},
        (Vec3){ 1.0f,    0.0f, -1.0f},   0.5f},
       {{.MATERIAL_KIND = KIND_DIELECTRIC, .materials.dielectric = {1.5f}},
        (Vec3){-1.0f,    0.0f, -1.0f},   0.5f},
@@ -58,12 +58,12 @@ main() {
        (Vec3){-1.0f,    0.0f, -1.0f}, -0.45f}
   };
 
-  Camera cam = {
-      (Vec3){-2.0f, -1.0f, -1.0f},
-      (Vec3){ 4.0f,  0.0f,  0.0f},
-      (Vec3){ 0.0f,  2.0f,  0.0f},
-      (Vec3){ 0.0f,  0.0f,  0.0f}
-  };
+  Camera cam = camera_new(
+      (Vec3){-2.0f, 2.0f,  1.0f},
+      (Vec3){ 0.0f, 0.0f, -1.0f},
+      (Vec3){ 0.0f, 1.0f,  0.0f},
+      90, (float)WIDTH / (float)HEIGHT
+  );
 
   for (short j = HEIGHT - 1; j >= 0; --j)
     for (unsigned short i = 0; i < WIDTH; ++i) {
@@ -73,10 +73,10 @@ main() {
         float v = (float)(j + random_float()) / (float)HEIGHT;
   
         Ray r = camera_get_ray(cam, u, v);
-        col += color(r, sphere, SPHERES_NUM, 0);
+        col  += color(r, spheres, SPHERES_NUM, 0);
       }
       col /= (float)SAMPLES;
-      col = (Vec3){sqrtf(col.x), sqrtf(col.y), sqrtf(col.z)};
+      col  = (Vec3){sqrtf(col.x), sqrtf(col.y), sqrtf(col.z)};
 
       unsigned char ir = (unsigned char)(255.99f * col.r);
       unsigned char ig = (unsigned char)(255.99f * col.g);

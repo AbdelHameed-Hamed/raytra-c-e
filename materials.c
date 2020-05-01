@@ -31,18 +31,18 @@ schlick(float cos, float ref_idx) {
 
 static float
 random_float() {
-  float rand_n = rand() / (float)RAND_MAX;
-  rand_n = rand_n == 1.0f ? 0.0f : rand_n;
-  return rand_n;
+	float rand_n = rand() / (float)RAND_MAX;
+	rand_n = rand_n == 1.0f ? 0.0f : rand_n;
+	return rand_n;
 }
 
 static Vec3
 random_in_unit_sphere() {
-  Vec3 p = {0.0f};
-  do {
-    p = 2.0f * (Vec3){random_float(), random_float(), random_float()} - (Vec3){1.0f, 1.0f, 1.0f};
-  } while (vec3_mag_sqr(p) >= 1.0f);
-  return p;
+	Vec3 p = {0.0f};
+	do {
+	  p = 2.0f * (Vec3){random_float(), random_float(), random_float()} - (Vec3){1.0f, 1.0f, 1.0f};
+	} while (vec3_mag_sqr(p) >= 1.0f);
+	return p;
 }
 
 typedef struct {
