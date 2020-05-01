@@ -10,4 +10,4 @@ Work in progress.
 
 ## Positionable Camera
 
-![image info](./Positionable Camera.jpg)
+![image info](./Positionable-Camera.jpg)
