@@ -58,11 +58,12 @@ main() {
        (Vec3){-1.0f,    0.0f, -1.0f}, -0.45f}
   };
 
+  Vec3 look_from = {3.0f, 3.0f,  2.0f};
+  Vec3 look_at   = {0.0f, 0.0f, -1.0f};
+
   Camera cam = camera_new(
-      (Vec3){-2.0f, 2.0f,  1.0f},
-      (Vec3){ 0.0f, 0.0f, -1.0f},
-      (Vec3){ 0.0f, 1.0f,  0.0f},
-      90, (float)WIDTH / (float)HEIGHT
+      look_from, look_at, (Vec3){0.0f, 1.0f,  0.0f},
+      20, (float)WIDTH / (float)HEIGHT, 2.0f, vec3_mag(look_from - look_at)
   );
 
   for (short j = HEIGHT - 1; j >= 0; --j)

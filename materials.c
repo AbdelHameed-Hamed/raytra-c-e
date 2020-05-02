@@ -1,6 +1,5 @@
 #include "hittable.c"
 
-#include <stdlib.h>
 #include <assert.h>
 
 static Vec3
@@ -27,13 +26,6 @@ schlick(float cos, float ref_idx) {
 	float r_0 = (1 - ref_idx) / (1 + ref_idx);
 	r_0 *= r_0;
 	return r_0 + (1 - r_0) * powf(1.0f - cos, 5.0f);
-}
-
-static float
-random_float() {
-	float rand_n = rand() / (float)RAND_MAX;
-	rand_n = rand_n == 1.0f ? 0.0f : rand_n;
-	return rand_n;
 }
 
 static Vec3
