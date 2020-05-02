@@ -1,6 +1,7 @@
 #include "hittable.c"
 
 #include <assert.h>
+#include <stdio.h>
 
 static Vec3
 reflect(const Vec3 vec, const Vec3 norm) {
@@ -134,16 +135,17 @@ material_scatter(Material self,
 				 Ray *scattered) {
 	_Bool res;
 	switch (self.MATERIAL_KIND) {
-		case KIND_LAMBERTIAN:
-			res = lambertian_scatter(self.materials.lambertian, rec, attenuation, scattered);
-			break;
 		case KIND_METAL:
 			res = metal_scatter(self.materials.metal, r_in, rec, attenuation, scattered);
+			break;
+		case KIND_LAMBERTIAN:
+			res = lambertian_scatter(self.materials.lambertian, rec, attenuation, scattered);
 			break;
 		case KIND_DIELECTRIC:
 			res = dielectric_scatter(self.materials.dielectric, r_in, rec, attenuation, scattered);
 			break;
-		default: assert(0 && "Invalid material\n");
+		default:
+			assert(0 && "Invalid material\n");
 	}
 
 	return res;

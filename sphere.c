@@ -16,15 +16,15 @@ sphere_hit(const Sphere self, const Ray r, float t_min, float t_max, Hit_Record 
 	if (discriminant > 0) {
 		float temp = (-b - sqrtf(discriminant)) / a;
 		if (temp < t_max && temp > t_min) {
-            rec->t = temp;
-            rec->p = ray_point_at_parameter(r, rec->t);
+            rec->t		= temp;
+            rec->p		= ray_point_at_parameter(r, rec->t);
             rec->normal = (rec->p - self.center) / self.radius;
             return 1;
         }
         temp = (-b + sqrtf(discriminant)) / a;
         if (temp < t_max && temp > t_min) {
-            rec->t = temp;
-            rec->p = ray_point_at_parameter(r, rec->t);
+            rec->t		= temp;
+            rec->p		= ray_point_at_parameter(r, rec->t);
             rec->normal = (rec->p - self.center) / self.radius;
             return 1;
         }
