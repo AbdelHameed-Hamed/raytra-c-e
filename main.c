@@ -1,6 +1,8 @@
 #include "includes.c"
 
+#include <inttypes.h>
 #include <stdio.h>
+#include <time.h>
 
 typedef struct {
 	Sphere *spheres;
@@ -15,7 +17,7 @@ random_scene() {
 			.MATERIAL_KIND		  = KIND_LAMBERTIAN,
 			.materials.lambertian = {.albedo = {0.5f, 0.5f, 0.5f}}
 		},
-		.center =(Vec3){0.0f, -1000.0f, 0.0f}, .radius = 1000.0f
+		.center = (Vec3){0.0f, -1000.0f, 0.0f}, .radius = 1000.0f
 	};
 
 	int i = 1;
@@ -119,14 +121,10 @@ color(const Ray r, Sphere spheres[], int count, int depth) {
 }
 
 
-// clang -std=c18 -Wall -Weverything -Wextra -Wpedantic -Ofast main.c -o main.exe
+// clang -std=c18 -Wall -Weverything -Wextra -Wpedantic -Ofast -march=native -fopenmp main.c -o main.exe
 int
 main() {
-	FILE *fp;
-	fopen_s(&fp, "image.ppm", "w");
-
-	const unsigned short WIDTH = 1280, HEIGHT = 720, SAMPLES = 100;
-	fprintf(fp, "P3\n%d %d \n255\n", WIDTH, HEIGHT);
+	const uint16_t WIDTH = 640, HEIGHT = 360, SAMPLES = 10;
 
 	Camera cam = camera_new((Vec3){13.0f, 2.0f, 3.0f},
 							(Vec3){ 0.0f, 0.0f, 0.0f},
@@ -135,11 +133,15 @@ main() {
 	);
 
 	Sphere_World world = random_scene();
+	uint8_t *image = (uint8_t *)malloc(sizeof(uint8_t) * WIDTH * HEIGHT * 3);
 
-	for (short j = HEIGHT - 1; j >= 0; --j)
-		for (unsigned short i = 0; i < WIDTH; ++i) {
+	time_t start = clock();
+
+#pragma omp parallel for
+	for (int16_t j = HEIGHT - 1; j >= 0; --j)
+		for (uint16_t i = 0; i < WIDTH; ++i) {
 			Vec3 col = {0.0f};
-			for (unsigned short k = 0; k < SAMPLES; ++k) {
+			for (uint16_t k = 0; k < SAMPLES; ++k) {
 				float u = (float)(i + random_float()) / (float)WIDTH;
 				float v = (float)(j + random_float()) / (float)HEIGHT;
 
@@ -149,15 +151,31 @@ main() {
 			col /= (float)SAMPLES;
 			col  = (Vec3){sqrtf(col.x), sqrtf(col.y), sqrtf(col.z)};
 
-			unsigned char ir = (unsigned char)(255.99f * col.r);
-			unsigned char ig = (unsigned char)(255.99f * col.g);
-			unsigned char ib = (unsigned char)(255.99f * col.b);
-
-			fprintf(fp, "%d %d %d\n", ir, ig, ib);
+			image[(WIDTH * j + i) * 3]	   = (uint8_t)(255 * col.r);
+			image[(WIDTH * j + i) * 3 + 1] = (uint8_t)(255 * col.g);
+			image[(WIDTH * j + i) * 3 + 2] = (uint8_t)(255 * col.b);
 		}
 
-	free(world.spheres);
+	time_t end = clock();
+
+	double seconds = difftime(end, start);
+
+	printf("%lf\n", seconds / 1000);
+
+	FILE *fp;
+	fopen_s(&fp, "image.ppm", "w");
+
+	fprintf(fp, "P3\n%d %d \n255\n", WIDTH, HEIGHT);
+	for (int16_t j = HEIGHT - 1; j >= 0; --j)
+		for (uint16_t i = 0; i < WIDTH; ++i)
+			fprintf(fp, "%d %d %d\n", image[(WIDTH * j + i) * 3],
+									  image[(WIDTH * j + i) * 3 + 1],
+									  image[(WIDTH * j + i) * 3 + 2]);
+	
 	fclose(fp);
+	
+	free(world.spheres);
+	free(image);
 
 	return 0;
 }
