@@ -141,12 +141,12 @@ main() {
 	);
 
 	Sphere_World world = random_scene();
-	uint8_t *image = (uint8_t *)malloc(sizeof(uint8_t) * WIDTH * HEIGHT * 3);
+	uint8_t *image = malloc(sizeof(uint8_t) * WIDTH * HEIGHT * 3);
 
 	time_t start = clock();
 
 #pragma omp parallel for
-	for (uint16_t j = 0; j <= HEIGHT; ++j)
+	for (uint16_t j = 0; j < HEIGHT; ++j)
 		for (uint16_t i = 0; i < WIDTH; ++i) {
 			Vec3 col = {0.0f};
 			for (uint16_t k = 0; k < SAMPLES; ++k) {
