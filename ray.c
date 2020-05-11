@@ -4,11 +4,19 @@
 
 #include <stdlib.h>
 
-static float
+#ifndef M_PI
+#define M_PI (3.14159265358979323846264338327950288f)
+#endif
+
+__attribute__((always_inline)) static float
 random_float() {
-	float rand_n = rand() / (float)RAND_MAX;
-	rand_n = rand_n == 1.0f ? 0.0f : rand_n;
-	return rand_n;
+	// Might wanna change this later.
+	return rand() / (RAND_MAX + 1.0);
+}
+
+__attribute__((always_inline)) static float
+random_float_in_range(float min, float max) {
+	return min + (max - min) * random_float();
 }
 
 typedef struct {

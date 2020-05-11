@@ -31,11 +31,19 @@ schlick(float cos, float ref_idx) {
 
 static Vec3
 random_in_unit_sphere() {
-	Vec3 p = {0.0f};
+	Vec3 p = {0};
 	do {
 	  p = 2.0f * (Vec3){random_float(), random_float(), random_float()} - (Vec3){1.0f, 1.0f, 1.0f};
 	} while (vec3_mag_sqr(p) >= 1.0f);
 	return p;
+}
+
+static Vec3
+random_unit_vector() {
+	float a = random_float_in_range(0.0f, 2.0f * M_PI);
+	float z = random_float_in_range(-1.0f, 1.0f);
+	float r = sqrtf(1.0f - z * z);
+	return (Vec3){r * cosf(a), r * sinf(a), z};
 }
 
 typedef struct {
@@ -47,8 +55,7 @@ lambertian_scatter(const Lambertian self,
 				   const Hit_Record rec,
 				   Vec3 *attenuation,
 				   Ray *scattered) {
-	Vec3 target = rec->normal + random_in_unit_sphere();
-	*scattered = (Ray){rec->p, target};
+	*scattered	 = (Ray){rec->p, rec->normal + random_unit_vector()};
 	*attenuation = self.albedo;
 	return 1;
 }
@@ -65,8 +72,8 @@ metal_scatter(const Metal self,
 			  Vec3 *attenuation,
 			  Ray *scattered) {
 	Vec3 reflected = reflect(vec3_unit(r_in.direction), rec->normal);
-	*scattered = (Ray){rec->p, reflected + self.fuzz * random_in_unit_sphere()};
-	*attenuation = self.albedo;
+	*scattered	   = (Ray){rec->p, reflected + self.fuzz * random_in_unit_sphere()};
+	*attenuation   = self.albedo;
 	return (vec3_dot(scattered->direction, rec->normal) > 0);
 }
 

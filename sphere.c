@@ -6,7 +6,7 @@ typedef struct {
 	float radius;
 } Sphere;
 
-static _Bool
+__attribute__((always_inline)) static _Bool
 sphere_hit(const Sphere self, const Ray r, float t_min, float t_max, Hit_Record rec) {
 	Vec3 oc = r.origin - self.center;
 	float a = vec3_mag_sqr(r.direction);

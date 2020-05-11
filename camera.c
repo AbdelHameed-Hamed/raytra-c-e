@@ -1,9 +1,5 @@
 #include "ray.c"
 
-#ifndef M_PI
-#define M_PI (3.14159265358979323846264338327950288f)
-#endif
-
 static Vec3 
 random_vec3_in_unit_disk() {
 	Vec3 res;

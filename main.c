@@ -92,32 +92,40 @@ random_scene() {
 }
 
 static Vec3
-color(const Ray r, Sphere spheres[], int count, int depth) {
-	IHit_Record rec;
-	_Bool hit_anything   = 0.0f;
-	float closest_so_far = __FLT_MAX__;
-	Material sp_material = {0};
+color(Ray r, Sphere spheres[], int count) {
+	Vec3 ray_color = {1.0f, 1.0f, 1.0f};
 
-	for (int i = 0; i < count; ++i)
-		if (sphere_hit(spheres[i], r, 0.001f, closest_so_far, &rec)) {
-			hit_anything   = 1.0f;
-			closest_so_far = rec.t;
-			sp_material    = spheres[i].material;
+	for (uint8_t depth = 0; depth < 50; ++depth) {
+		IHit_Record rec;
+		_Bool hit_anything   = 0;
+		float closest_so_far = __FLT_MAX__;
+		Material sp_material = {0};
+
+		for (int i = 0; i < count; ++i)
+			if (sphere_hit(spheres[i], r, 0.001f, closest_so_far, &rec)) {
+				hit_anything   = 1;
+				closest_so_far = rec.t;
+				sp_material    = spheres[i].material;
+			}
+
+		if (hit_anything) {
+			Ray scattered	 = {0};
+			Vec3 attenuation = {0};
+			if (material_scatter(sp_material, r, &rec, &attenuation, &scattered)) {
+				r		   = scattered;
+				ray_color *= attenuation;
+			}
+			else
+				return (Vec3){0};
 		}
+		else {
+			Vec3 unit_direction = vec3_unit(r.direction);
+			float t = 0.5f * unit_direction.y + 1.0f;
+			return ray_color * ((1.0f - t) * (Vec3){1.0f, 1.0f, 1.0f} + t * (Vec3){0.5f, 0.7f, 1.0f});
+		}
+	}
 
-	if (hit_anything) {
-		Ray scattered	 = {0};
-		Vec3 attenuation = {0};
-		if (depth < 50 && material_scatter(sp_material, r, &rec, &attenuation, &scattered))
-			return attenuation * color(scattered, spheres, count, depth + 1);
-		else
-			return (Vec3){0.0f, 0.0f, 0.0f};
-	}
-	else {
-		Vec3 unit_direction = vec3_unit(r.direction);
-		float t = 0.5f * unit_direction.y + 1.0f;
-		return (1.0f - t) * (Vec3){1.0f, 1.0f, 1.0f} + t * (Vec3){0.5f, 0.7f, 1.0f};
-	}
+	return ray_color;
 }
 
 
@@ -138,7 +146,7 @@ main() {
 	time_t start = clock();
 
 #pragma omp parallel for
-	for (int16_t j = HEIGHT - 1; j >= 0; --j)
+	for (uint16_t j = 0; j <= HEIGHT; ++j)
 		for (uint16_t i = 0; i < WIDTH; ++i) {
 			Vec3 col = {0.0f};
 			for (uint16_t k = 0; k < SAMPLES; ++k) {
@@ -146,7 +154,7 @@ main() {
 				float v = (float)(j + random_float()) / (float)HEIGHT;
 
 				Ray r = camera_get_ray(cam, u, v);
-				col  += color(r, world.spheres, world.count, 0);
+				col  += color(r, world.spheres, world.count);
 			}
 			col /= (float)SAMPLES;
 			col  = (Vec3){sqrtf(col.x), sqrtf(col.y), sqrtf(col.z)};

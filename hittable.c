@@ -17,6 +17,4 @@ typedef struct {
 	Vec3 p;
 	Vec3 normal;
 	float t;
-} IHit_Record;
-
-typedef IHit_Record *Hit_Record;
+} IHit_Record, *Hit_Record;
