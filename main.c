@@ -132,7 +132,7 @@ color(Ray r, Sphere spheres[], int count) {
 // clang -std=c18 -Wall -Weverything -Wextra -Wpedantic -Ofast -march=native -fopenmp main.c -o main.exe
 int
 main() {
-	const uint16_t WIDTH = 640, HEIGHT = 360, SAMPLES = 10;
+	const uint16_t WIDTH = 640, HEIGHT = 360, SAMPLES = 64;
 
 	Camera cam = camera_new((Vec3){13.0f, 2.0f, 3.0f},
 							(Vec3){ 0.0f, 0.0f, 0.0f},
