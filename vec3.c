@@ -1,3 +1,5 @@
+#pragma once
+
 #include <math.h>
 
 typedef float Vec3 __attribute__((ext_vector_type(3)));
