@@ -150,8 +150,6 @@ color(Ray r, Sphere spheres[], int count)
     return ray_color;
 }
 
-
-// clang -std=c18 -Wall -Weverything -Wextra -Wpedantic -Ofast -march=native -fopenmp main.c -o main.exe
 int
 main()
 {

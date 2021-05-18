@@ -4,7 +4,7 @@
 #define INLINE __attribute__((always_inline))
 
 typedef __m256 IComponent8f, *Component8f;
-typedef uint32_t uint32x8 __attribute__((__vector_size__(32), __aligned__(32)));
+typedef u32 uint32x8 __attribute__((__vector_size__(32), __aligned__(32)));
 
 _Thread_local static uint32x8 rnd_states8 = {
 	1		 , 268476417, 1157628417, 1158709409,
