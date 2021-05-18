@@ -3,6 +3,8 @@
 
 #include "Sphere.h"
 #include "Camera.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image-2.26\stb_image_write.h"
 
 typedef struct {
     Sphere *spheres;
@@ -106,7 +108,7 @@ color(Ray r, Sphere spheres[], int count)
 {
     Vec3 ray_color = {1.0f, 1.0f, 1.0f};
 
-    for (uint8_t depth = 0; depth < 50; ++depth)
+    for (u8 depth = 0; depth < 50; ++depth)
     {
         IHit_Record rec;
         _Bool hit_anything   = 0;
@@ -153,7 +155,7 @@ color(Ray r, Sphere spheres[], int count)
 int
 main()
 {
-    const uint16_t WIDTH = 640, HEIGHT = 360, SAMPLES = 64;
+    const u16 WIDTH = 640, HEIGHT = 360, SAMPLES = 64;
 
     Camera cam = camera_new(
         (Vec3){13.0f, 2.0f, 3.0f},
@@ -166,17 +168,17 @@ main()
     );
 
     Sphere_World world = random_scene();
-    uint8_t *image     = malloc(sizeof(uint8_t) * WIDTH * HEIGHT * 3);
+    u8 *image     = malloc(sizeof(u8) * WIDTH * HEIGHT * 3);
 
     time_t start = clock();
 
-#pragma omp parallel for
-    for (uint16_t j = 0; j < HEIGHT; ++j)
+    #pragma omp parallel for
+    for (u16 j = 0; j < HEIGHT; ++j)
     {
-        for (uint16_t i = 0; i < WIDTH; ++i)
+        for (u16 i = 0; i < WIDTH; ++i)
         {
             Vec3 col = {0.0f};
-            for (uint16_t k = 0; k < SAMPLES; ++k)
+            for (u16 k = 0; k < SAMPLES; ++k)
             {
                 float u = (float)(i + random_float()) / (float)WIDTH;
                 float v = (float)(j + random_float()) / (float)HEIGHT;
@@ -187,9 +189,9 @@ main()
             col /= (float)SAMPLES;
             col  = (Vec3){sqrtf(col.x), sqrtf(col.y), sqrtf(col.z)};
 
-            image[(WIDTH * j + i) * 3]     = (uint8_t)(255 * col.r);
-            image[(WIDTH * j + i) * 3 + 1] = (uint8_t)(255 * col.g);
-            image[(WIDTH * j + i) * 3 + 2] = (uint8_t)(255 * col.b);
+            image[(WIDTH * j + i) * 3]     = (u8)(255 * col.r);
+            image[(WIDTH * j + i) * 3 + 1] = (u8)(255 * col.g);
+            image[(WIDTH * j + i) * 3 + 2] = (u8)(255 * col.b);
         }
     }
 
@@ -199,25 +201,8 @@ main()
 
     printf("%lf\n", seconds / 1000);
 
-    FILE *fp;
-    fopen_s(&fp, "image.ppm", "w");
-
-    fprintf(fp, "P3\n%d %d \n255\n", WIDTH, HEIGHT);
-    for (int16_t j = HEIGHT - 1; j >= 0; --j)
-    {
-        for (uint16_t i = 0; i < WIDTH; ++i)
-        {
-            fprintf(
-                fp,
-                "%d %d %d\n",
-                image[(WIDTH * j + i) * 3],
-                image[(WIDTH * j + i) * 3 + 1],
-                image[(WIDTH * j + i) * 3 + 2]
-            );
-        }
-    }
-
-    fclose(fp);
+    stbi_flip_vertically_on_write(1);
+    stbi_write_png("image.png", WIDTH, HEIGHT, 3, image, 0);
 
     free(world.spheres);
     free(image);
