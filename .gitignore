@@ -1,0 +1,12 @@
+.vs/
+.vscode/
+GPUCache/
+VTune Profiler Results
+*.exe
+*.s
+*.lib
+*.pdb
+*.log
+*.diagsession
+*.exp
+*.sln
