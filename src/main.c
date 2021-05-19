@@ -15,7 +15,7 @@ static Sphere_World
 random_scene()
 {
     Sphere *spheres = (Sphere *)malloc(sizeof(Sphere) * 500);
-    spheres[0] = (Sphere){
+    spheres[0]      = (Sphere){
         .material = {
             .MATERIAL_KIND               = KIND_LAMBERTIAN,
             .materials.lambertian.albedo = {0.5f, 0.5f, 0.5f}
@@ -166,7 +166,7 @@ main()
     );
 
     Sphere_World world = random_scene();
-    u8 *image     = malloc(sizeof(u8) * WIDTH * HEIGHT * 3);
+    u8 *image          = malloc(sizeof(u8) * WIDTH * HEIGHT * 3);
 
     time_t start = clock();
 
@@ -200,7 +200,7 @@ main()
     printf("%lf\n", seconds / 1000);
 
     stbi_flip_vertically_on_write(1);
-    stbi_write_png("image.png", WIDTH, HEIGHT, 3, image, 0);
+    stbi_write_jpg("image.jpg", WIDTH, HEIGHT, 3, image, 0);
 
     free(world.spheres);
     free(image);

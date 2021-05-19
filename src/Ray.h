@@ -8,11 +8,26 @@
 #define M_PI (3.14159265358979323846264338327950288f)
 #endif
 
+// Note: Should probably deal with multithreading stuff in a better way...
+thread_local u32 seed = 7;
+
+INLINE static u32
+xor_shift32()
+{
+    u32 x = seed;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 15;
+    seed = x;
+
+    return x;
+}
+
 INLINE static float
 random_float()
 {
     // Might wanna change this later.
-    return rand() / (RAND_MAX + 1.0);
+    return xor_shift32() / (float)UINT32_MAX;
 }
 
 INLINE static float

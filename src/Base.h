@@ -19,3 +19,5 @@ typedef float f32;
 typedef double f64;
 
 #define INLINE __attribute__((always_inline))
+
+#define thread_local _Thread_local

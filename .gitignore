@@ -10,3 +10,4 @@ VTune Profiler Results
 *.diagsession
 *.exp
 *.sln
+*.ilk

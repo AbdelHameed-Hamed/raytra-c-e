@@ -1,5 +1,7 @@
 # raytra-c-e
 
+[Based on Peter Shirly's Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
+
 Work in progress.
 
 ## Dielectrics
