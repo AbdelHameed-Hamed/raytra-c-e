@@ -110,7 +110,7 @@ color(Ray r, Sphere spheres[], int count)
 
     for (u8 depth = 0; depth < 50; ++depth)
     {
-        IHit_Record rec;
+        Hit_Record rec;
         _Bool hit_anything   = 0;
         float closest_so_far = __FLT_MAX__;
         Material sp_material = {0};

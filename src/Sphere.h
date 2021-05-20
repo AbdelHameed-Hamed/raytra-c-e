@@ -1,3 +1,7 @@
+#pragma once
+
+#include <stdbool.h>
+
 #include "Materials.h"
 
 typedef struct {
@@ -7,7 +11,7 @@ typedef struct {
 } Sphere;
 
 INLINE static _Bool
-sphere_hit(const Sphere self, const Ray r, float t_min, float t_max, Hit_Record rec)
+sphere_hit(const Sphere self, const Ray r, float t_min, float t_max, Hit_Record *rec)
 {
     Vec3 oc = r.origin - self.center;
     float a = vec3_mag_sqr(r.direction);

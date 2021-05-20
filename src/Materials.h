@@ -1,3 +1,5 @@
+#pragma once
+
 #include <assert.h>
 
 #include "Hittable.h"
@@ -59,7 +61,7 @@ typedef struct {
 static _Bool
 lambertian_scatter(
     const Lambertian self,
-    const Hit_Record rec,
+    const Hit_Record *rec,
     Vec3 *attenuation,
     Ray *scattered)
 {
@@ -78,7 +80,7 @@ static _Bool
 metal_scatter(
     const Metal self,
     const Ray r_in,
-    const Hit_Record rec,
+    const Hit_Record *rec,
     Vec3 *attenuation,
     Ray *scattered)
 {
@@ -97,7 +99,7 @@ static _Bool
 dielectric_scatter(
     const Dielectric self,
     const Ray r_in,
-    const Hit_Record rec,
+    const Hit_Record *rec,
     Vec3 *attenuation,
     Ray *scattered)
 {
@@ -158,7 +160,7 @@ static _Bool
 material_scatter(
     Material self,
     const Ray r_in,
-    const Hit_Record rec,
+    const Hit_Record *rec,
     Vec3 *attenuation,
     Ray *scattered)
 {
