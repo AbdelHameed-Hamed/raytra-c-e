@@ -103,7 +103,7 @@ random_scene()
     return (Sphere_World){.spheres = spheres, .count = i};
 }
 
-static Vec3
+INLINE static Vec3
 color(Ray r, Sphere spheres[], int count)
 {
     Vec3 ray_color = {1.0f, 1.0f, 1.0f};
@@ -195,9 +195,9 @@ main()
 
     time_t end = clock();
 
-    double seconds = difftime(end, start);
+    double milliseconds = difftime(end, start);
 
-    printf("%lf\n", seconds / 1000);
+    printf("%lf\n", milliseconds / 1000);
 
     stbi_flip_vertically_on_write(1);
     stbi_write_jpg("image.jpg", WIDTH, HEIGHT, 3, image, 0);

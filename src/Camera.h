@@ -2,7 +2,7 @@
 
 #include "Ray.h"
 
-static Vec3 
+INLINE static Vec3
 random_vec3_in_unit_disk()
 {
     Vec3 res;
@@ -22,7 +22,7 @@ typedef struct {
     float lens_radius;
 } Camera;
 
-static Camera
+__vectorcall INLINE static Camera
 camera_new(
     Vec3 look_from,
     Vec3 look_at,
@@ -54,7 +54,7 @@ camera_new(
     return self;
 }
 
-static Ray
+__vectorcall INLINE static Ray
 camera_get_ray(const Camera self, float u, float v)
 {
     Vec3 rd     = self.lens_radius * random_vec3_in_unit_disk();

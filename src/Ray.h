@@ -30,7 +30,7 @@ random_float()
     return xor_shift32() / (float)UINT32_MAX;
 }
 
-INLINE static float
+__vectorcall INLINE static float
 random_float_in_range(float min, float max)
 {
     return min + (max - min) * random_float();
@@ -41,7 +41,7 @@ typedef struct {
     Vec3 direction;
 } Ray;
 
-INLINE static Vec3
+__vectorcall INLINE static Vec3
 ray_point_at_parameter(const Ray self, float t)
 {
     return self.origin + t * self.direction;

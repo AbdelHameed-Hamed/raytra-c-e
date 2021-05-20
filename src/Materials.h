@@ -4,13 +4,13 @@
 
 #include "Hittable.h"
 
-static Vec3
+__vectorcall INLINE static Vec3
 reflect(const Vec3 vec, const Vec3 norm)
 {
     return vec - 2 * vec3_dot(vec, norm) * norm;
 }
 
-static _Bool
+__vectorcall INLINE static _Bool
 refract(const Vec3 vec, const Vec3 norm, float ni_over_nt, Vec3* refracted)
 {
     Vec3 uv            = vec3_unit(vec);
@@ -25,7 +25,7 @@ refract(const Vec3 vec, const Vec3 norm, float ni_over_nt, Vec3* refracted)
     return 0;
 }
 
-static float
+__vectorcall INLINE static float
 schlick(float cos, float ref_idx)
 {
     float r_0 = (1 - ref_idx) / (1 + ref_idx);
@@ -34,7 +34,7 @@ schlick(float cos, float ref_idx)
     return r_0 + (1 - r_0) * powf(1.0f - cos, 5.0f);
 }
 
-static Vec3
+INLINE static Vec3
 random_in_unit_sphere()
 {
     Vec3 p = {0};
@@ -44,7 +44,7 @@ random_in_unit_sphere()
     return p;
 }
 
-static Vec3
+INLINE static Vec3
 random_unit_vector()
 {
     float a = random_float_in_range(0.0f, 2.0f * M_PI);
@@ -58,7 +58,7 @@ typedef struct {
     Vec3 albedo;
 } Lambertian;
 
-static _Bool
+__vectorcall INLINE static _Bool
 lambertian_scatter(
     const Lambertian self,
     const Hit_Record *rec,
@@ -76,7 +76,7 @@ typedef struct {
     float fuzz;
 } Metal;
 
-static _Bool
+__vectorcall INLINE static _Bool
 metal_scatter(
     const Metal self,
     const Ray r_in,
@@ -95,7 +95,7 @@ typedef struct {
     float ref_idx;
 } Dielectric;
 
-static _Bool
+__vectorcall INLINE static _Bool
 dielectric_scatter(
     const Dielectric self,
     const Ray r_in,
@@ -156,7 +156,7 @@ typedef struct {
     } MATERIAL_KIND;
 } Material;
 
-static _Bool
+__vectorcall INLINE static _Bool
 material_scatter(
     Material self,
     const Ray r_in,
