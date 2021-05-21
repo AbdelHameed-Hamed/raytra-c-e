@@ -106,8 +106,8 @@ random_scene()
 INLINE static Vec3
 color(Ray r, Sphere spheres[], int count)
 {
-    // TracyCZone(ctx, 1);
-
+    TracyCZone(ctx, 1);
+    defer{TracyCZoneEnd(ctx)};
     Vec3 ray_color = {1.0f, 1.0f, 1.0f};
 
     for (u8 depth = 0; depth < 50; ++depth)
@@ -149,8 +149,6 @@ color(Ray r, Sphere spheres[], int count)
         }
     }
 
-    // TracyCZoneEnd(ctx);
-
     return ray_color;
 }
 
@@ -160,7 +158,6 @@ color(Ray r, Sphere spheres[], int count)
 int
 main()
 {
-    TracyCFrameMark;
     const u16 WIDTH = 640, HEIGHT = 360, SAMPLES = 64;
 
     Camera cam = camera_new(
@@ -181,7 +178,6 @@ main()
     #pragma omp parallel for
     for (u16 j = 0; j < HEIGHT; ++j)
     {
-        // TracyCFrameMark;
         for (u16 i = 0; i < WIDTH; ++i)
         {
             Vec3 col = {0.0f};
