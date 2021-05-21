@@ -11,3 +11,4 @@ VTune Profiler Results
 *.exp
 *.sln
 *.ilk
+*.o
