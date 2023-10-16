@@ -38,8 +38,9 @@ INLINE static Vec3
 random_in_unit_sphere()
 {
     Vec3 p = {0};
-    while (vec3_mag_sqr(p) >= 1.0f)
-      p = 2.0f * (Vec3){random_float(), random_float(), random_float()} - (Vec3){1.0f, 1.0f, 1.0f};
+    do {
+        p = 2.0f * (Vec3){random_float(), random_float(), random_float()} - (Vec3){1.0f, 1.0f, 1.0f};
+    } while (vec3_mag_sqr(p) >= 1.0f);
 
     return p;
 }

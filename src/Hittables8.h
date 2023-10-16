@@ -1,8 +1,8 @@
 #pragma once
 
-#include "component8.c"
+#include "Vec3x8.h"
 
 typedef struct {
-	IVec3x8 ps, normals;
-	IComponent8f t;
-} IHit_Records8, *Hit_Records8;
+    Vec3x8 ps, normals;
+    f32x8 ts;
+} Hit_Records8;

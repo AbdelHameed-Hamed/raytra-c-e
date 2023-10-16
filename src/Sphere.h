@@ -13,9 +13,6 @@ typedef struct {
 __vectorcall INLINE static _Bool
 sphere_hit(const Sphere self, const Ray r, float t_min, float t_max, Hit_Record *rec)
 {
-    TracyCZone(ctx, 1);
-    defer{TracyCZoneEnd(ctx)};
-
     Vec3 oc = r.origin - self.center;
     float a = vec3_mag_sqr(r.direction);
     float b = vec3_dot(oc, r.direction);

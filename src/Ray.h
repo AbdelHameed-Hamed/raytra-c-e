@@ -23,11 +23,28 @@ xor_shift32()
     return x;
 }
 
+thread_local struct {
+    u64 state;
+    u64 inc;
+} rng = { 0x853c49e6748fea9bULL, 0xda3e39cb94b95bdbULL };
+
+INLINE static u32
+pcg32_random_r()
+{
+    u64 oldstate = rng.state;
+    // Advance internal state
+    rng.state = oldstate * 6364136223846793005ULL + (rng.inc|1);
+    // Calculate output function (XSH RR), uses old state for max ILP
+    u32 xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
+    u32 rot = oldstate >> 59u;
+    return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
+}
+
 INLINE static float
 random_float()
 {
     // Might wanna change this later.
-    return xor_shift32() / (float)UINT32_MAX;
+    return pcg32_random_r() / (float)UINT32_MAX;
 }
 
 __vectorcall INLINE static float
