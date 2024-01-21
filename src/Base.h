@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+#include "tracy-0.7.8\TracyC.h"
+
 // Unsigned
 typedef uint8_t u8;
 typedef uint16_t u16;

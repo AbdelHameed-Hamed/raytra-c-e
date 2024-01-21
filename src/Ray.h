@@ -12,8 +12,7 @@
 thread_local u32 seed = 7;
 
 INLINE static u32
-xor_shift32()
-{
+xor_shift32() {
     u32 x = seed;
     x ^= x << 13;
     x ^= x >> 17;
@@ -29,8 +28,7 @@ thread_local struct {
 } rng = { 0x853c49e6748fea9bULL, 0xda3e39cb94b95bdbULL };
 
 INLINE static u32
-pcg32_random_r()
-{
+pcg32_random_r() {
     u64 oldstate = rng.state;
     // Advance internal state
     rng.state = oldstate * 6364136223846793005ULL + (rng.inc|1);
@@ -41,15 +39,13 @@ pcg32_random_r()
 }
 
 INLINE static float
-random_float()
-{
+random_float() {
     // Might wanna change this later.
     return pcg32_random_r() / (float)UINT32_MAX;
 }
 
 __vectorcall INLINE static float
-random_float_in_range(float min, float max)
-{
+random_float_in_range(float min, float max) {
     return min + (max - min) * random_float();
 }
 
@@ -59,7 +55,6 @@ typedef struct {
 } Ray;
 
 __vectorcall INLINE static Vec3
-ray_point_at_parameter(const Ray self, float t)
-{
+ray_point_at_parameter(const Ray self, float t) {
     return self.origin + t * self.direction;
 }
